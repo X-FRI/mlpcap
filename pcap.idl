@@ -1,0 +1,278 @@
+/*
+ *	MLpcap: pcap bindings for OCaml.
+ *	Copyright (C) 2003-2004 Jonathan Heusser <jonny@drugphish.ch>
+ *
+ *	This library is free software; you can redistribute it and/or
+ *	modify it under the terms of the GNU Lesser General Public
+ *	License as published by the Free Software Foundation; either
+ *	version 2.1 of the License, or (at your option) any later version.
+ *
+ *	This library is distributed in the hope that it will be useful,
+ *	but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *	Lesser General Public License for more details.
+ *
+ *	You should have received a copy of the GNU Lesser General Public
+ *	License along with this library; if not, write to the Free Software
+ *	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307  USA
+ *
+ */
+
+quote(C, "\n\
+#include <pcap.h>\n\
+#include <callback.h>\n\
+#include \"utils.h\"\n\
+\n\
+extern void _pcap_callback (void *, va_alist);\n\
+")
+
+/* type defitions */
+typedef [abstract, ptr] void * pcap_handle;
+typedef [abstract, ptr] void * bpf_program;
+typedef [abstract, ptr] void * pcap_dumper;
+typedef [abstract, ptr] void * file_t;
+
+/* more complicated functions, externally defined in utils.c */
+quote(mli, "external pcap_findalldevs : unit -> pcap_if array\n\t\
+=\"camlidl_pcap_pcap_findalldevs\"\n");
+
+quote(ml, "external pcap_findalldevs : unit -> pcap_if array\n\t\
+= \"camlidl_pcap_pcap_findalldevs\"\n");
+
+/* only libpcap 0.8 */
+quote(mli, "external pcap_list_datalinks: pcap_handle -> int * int array\n\t\
+=\"camlidl_pcap_pcap_list_datalinks\"\n");
+
+quote(ml, "external pcap_list_datalinks: pcap_handle -> int * int array\n\t\
+=\"camlidl_pcap_pcap_list_datalinks\"\n");
+
+/* some none-abstract typedefs */
+struct timeval {
+	int tv_sec;
+	int tv_usec;
+};
+
+typedef struct {
+	struct timeval ts;
+	int caplen;
+	int len;
+} pcap_pkthdr;
+
+typedef struct {
+	unsigned int ps_recv;
+	unsigned int ps_drop;
+	unsigned int ps_ifdrop;
+} pcap_stat;
+
+typedef struct {
+	[ignore] struct pcap_if *next;
+	[string] char* name;
+	[string] char *description;
+	//struct pcap_addr *addresses;
+	int flags;
+} pcap_if;
+
+
+/* function definitions */
+
+/* callback handler from the ML view */
+typedef [abstract,mltype("string -> pcap_pkthdr -> string -> unit")] void *pcap_callback;
+
+pcap_handle pcap_open_live([in,string] char *dev, [in] int snaplen, 
+		[in] int promisc, [in] int to_ms)
+		quote(call, "\
+		{\
+		char errbuf[256];\
+\
+		_res = pcap_open_live(dev, snaplen, promisc, to_ms, errbuf);\
+		if(_res == NULL) {\
+			failwith(errbuf);\
+		}\
+		}");
+
+void pcap_close(pcap_handle p);
+
+[string] char *pcap_lookupdev()
+	quote(call, "\
+	{\
+	char errbuf[256];\
+\
+	_res = pcap_lookupdev(errbuf);\
+	if(_res == NULL) {\
+		failwith(errbuf);\
+	} \
+	}");
+
+int pcap_lookupnet([in,string] char *device, [out] int *netp,
+               [out] int *maskp)
+       quote(call, "\
+       {\
+       char errbuf[256];\
+\
+       _res = pcap_lookupnet(device, netp, maskp, errbuf);\
+       if(_res == -1) {\
+		failwith(errbuf);\
+	}\
+	}");
+
+int pcap_loop([in] pcap_handle p, [in] int cnt, [in] pcap_callback callback, 
+		[in,string] char *user)
+	quote(call, "\
+	{\
+	value* p_call_back;\
+	__TR_function cback;\
+	p_call_back = stat_alloc(sizeof(value));\
+	*p_call_back = _v_callback;\
+	register_global_root(p_call_back);\
+	cback = alloc_callback(_pcap_callback, p_call_back);\
+	_res = pcap_loop(p, cnt, (pcap_callback) cback, user);\
+\
+	}\
+");
+
+int pcap_dispatch([in] pcap_handle p, [in] int cnt, [in] pcap_callback callback,
+	[in,string] char *user)
+	quote(call, "\
+	{\
+	value* p_call_back;\
+	__TR_function cback;\
+	p_call_back = stat_alloc(sizeof(value));\
+	*p_call_back = _v_callback;\
+	register_global_root(p_call_back);\
+	cback = alloc_callback(_pcap_callback, p_call_back);\
+\
+	_res = pcap_dispatch(p, cnt, (pcap_callback) cback, user);\
+	}\
+");
+
+/* untested */
+pcap_handle pcap_open_dead([in] int linktype, [in] int snaplen);
+
+/* XXX: used with pcap_stats returns wrong stats */
+pcap_handle pcap_open_offline([in,string] char *fname) 
+	quote(call, "\
+	{\
+	char errbuf[256];\
+\
+	_res = pcap_open_offline(fname, errbuf);\
+	if(_res == NULL) {\
+		failwith(errbuf);\
+	}\
+	}");
+
+pcap_dumper pcap_dump_open([in] pcap_handle p, [in,string] char *fname)
+	quote(call, "\
+	{\
+	char *errbuf;\
+\
+	_res = pcap_dump_open(p, fname);\
+	if(_res == NULL) {\
+		errbuf = pcap_geterr(p);\
+		failwith(errbuf);\
+	}\
+	}");
+		
+/* FIXME: segfaults when called directly, only working when */
+/* used as a callback function from pcap_loop/dispatch */
+void pcap_dump_direct([in] pcap_dumper user,[in,ref] pcap_pkthdr *h, [in,string] unsigned char *sp)
+	quote(call, "\
+	{\
+	u_char *casted_user = (u_char*) user;\
+\
+	pcap_dump(casted_user, h, sp);\
+	}");
+
+void pcap_dump_close([in] pcap_dumper p);
+
+/* not sure if pcap_freealldevs() is needed or if the garbage collector
+ * cleans up the allocated pcap_if array */
+
+int pcap_compile([in] pcap_handle p, [out] bpf_program fp,
+		[in,string] char *str, [in] int optimize, [in] int netmask);
+
+int pcap_setfilter([in] pcap_handle p, [in] bpf_program fp);
+
+void pcap_freecode(bpf_program fp);
+
+
+int pcap_setnonblock([in] pcap_handle p, [in] int nonblock)
+	quote(call, "\
+	{\
+	char errbuf[256];\
+\
+	_res = pcap_setnonblock(p, nonblock, errbuf);\
+	if(_res == -1) {\
+		failwith(errbuf);\
+	}\
+	}");
+
+int pcap_getnonblock([in] pcap_handle p)
+	quote(call, "\
+	{\
+	char errbuf[256];\
+\
+	_res = pcap_getnonblock(p, errbuf);\
+	if(_res == -1) {\
+		failwith(errbuf);\
+	}\
+	}");
+
+int pcap_datalink([in] pcap_handle p);
+
+int pcap_snapshot([in] pcap_handle p);
+int pcap_is_swapped([in] pcap_handle p);
+int pcap_major_version([in] pcap_handle p);
+int pcap_minor_version([in] pcap_handle p);
+
+/* ok */
+int pcap_stats([in] pcap_handle p, [out] pcap_stat *ps);
+
+/* XXX: is this of any use in ocaml ?? */
+file_t pcap_file([in] pcap_handle p);
+
+int pcap_fileno([in] pcap_handle p);
+void pcap_perror([in] pcap_handle p, [in,string] char *prefix);
+
+[string] char *pcap_geterr([in] pcap_handle p);
+[string] char *pcap_strerror([in] int error);
+
+
+/* NEW */
+quote(C,"\n\
+#ifdef HAVE_PCAP08\n\
+\n\
+");
+
+int pcap_set_datalink([in] pcap_handle p, [in] int dlt);
+int pcap_datalink_name_to_val([in, string] char *name);
+
+[string] const char* pcap_datalink_val_to_name([in] int dlt)
+  quote(call,"\
+{\
+_res = (char*)pcap_datalink_val_to_name(dlt);\
+}");
+
+[string] const char* pcap_datalink_val_to_description([in] int dlt)
+  quote(call,"\
+{\
+_res = (char*)pcap_datalink_val_to_description(dlt);\
+}");
+
+
+int pcap_dump_flush([in] pcap_dumper p);
+
+//FILE *pcap_dump_file(pcap_dumper_t *p)
+
+void pcap_breakloop([in] pcap_handle p);
+int pcap_get_selectable_fd([in] pcap_handle p);
+
+[string] char* pcap_lib_version(void) 
+  quote(call,"\
+{\
+_res = (char*)pcap_lib_version();\
+}");
+
+quote(C,"\n\
+#endif\n\
+");
+

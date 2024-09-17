@@ -1,0 +1,24 @@
+OCAMLC=ocamlc
+CAMLP4O=camlp4o
+
+OBJECTS = misc.cmo pcap_next.cmo pcap_loop.cmo \
+pcap_dump_direct.cmo pcap_findalldevs.cmo \
+pcap_open_offline.cmo
+
+TARGETS = misc pcap_next pcap_loop \
+pcap_dump_direct pcap_findalldevs \
+pcap_open_offline
+
+all: $(TARGETS)
+
+$(TARGETS): $(OBJECTS)
+	$(OCAMLC) -g -o $@ $@.cmo -I .. pcap.cma -I @camlidllibdir@ -ccopt -L@libpcapdir@ -cclib -lpcap @ffcallarchive@
+
+clean:
+	rm -f *.cmo *.cmi $(TARGETS)
+
+.SUFFIXES: .ml .cmo .cmi
+
+.ml.cmo: 
+	$(OCAMLC) -pp '$(CAMLP4O) pa_macro.cmo -D@cp4flag@' -I .. -c $<
+

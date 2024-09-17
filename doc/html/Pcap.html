@@ -1,0 +1,206 @@
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<link rel="Start" href="index.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Pcap" rel="Chapter" href="Pcap.html"><title>Pcap</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a href="index.html">Up</a>
+&nbsp;</div>
+<center><h1>Module <a href="type_Pcap.html">Pcap</a></h1></center>
+<br>
+<pre><span class="keyword">module</span> Pcap: <code class="type">sig  end</code></pre><hr width="100%">
+<pre><span class="keyword">type</span> <a name="TYPEpcap_handle"></a><code class="type"></code>pcap_handle </pre>
+
+<pre><span class="keyword">type</span> <a name="TYPEbpf_program"></a><code class="type"></code>bpf_program </pre>
+
+<pre><span class="keyword">type</span> <a name="TYPEpcap_dumper"></a><code class="type"></code>pcap_dumper </pre>
+
+<pre><span class="keyword">type</span> <a name="TYPEfile_t"></a><code class="type"></code>file_t </pre>
+
+<br><code><span class="keyword">type</span> <a name="TYPEdlink"></a><code class="type"></code>dlink = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_NULL</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_EN10MB</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_EN3MB</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_AX25</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_PRONET</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_CHAOS</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_IEEE802</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_ARCNET</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_SLIP</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_PPP</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DLT_FDDI</span></code></td>
+
+</tr></table>
+
+
+<br><code><span class="keyword">type</span> <a name="TYPEtimeval"></a><code class="type"></code>timeval = {</code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>tv_sec&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>tv_usec&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+
+<br><code><span class="keyword">type</span> <a name="TYPEstruct_3"></a><code class="type"></code>struct_3 = {</code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>ts&nbsp;: <code class="type"><a href="Pcap.html#TYPEtimeval">timeval</a></code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>caplen&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>len&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+
+<pre><span class="keyword">type</span> <a name="TYPEpcap_pkthdr"></a><code class="type"></code>pcap_pkthdr = <code class="type"><a href="Pcap.html#TYPEstruct_3">struct_3</a></code> </pre>
+
+<br><code><span class="keyword">type</span> <a name="TYPEstruct_4"></a><code class="type"></code>struct_4 = {</code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>ps_recv&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>ps_drop&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>ps_ifdrop&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+
+<pre><span class="keyword">type</span> <a name="TYPEpcap_stat"></a><code class="type"></code>pcap_stat = <code class="type"><a href="Pcap.html#TYPEstruct_4">struct_4</a></code> </pre>
+
+<br><code><span class="keyword">type</span> <a name="TYPEstruct_5"></a><code class="type"></code>struct_5 = {</code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>name&nbsp;: <code class="type">string</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>description&nbsp;: <code class="type">string</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>flags&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+
+<pre><span class="keyword">type</span> <a name="TYPEpcap_if"></a><code class="type"></code>pcap_if = <code class="type"><a href="Pcap.html#TYPEstruct_5">struct_5</a></code> </pre>
+
+<pre><span class="keyword">type</span> <a name="TYPEpcap_callback"></a><code class="type"></code>pcap_callback = <code class="type">string -> <a href="Pcap.html#TYPEpcap_pkthdr">pcap_pkthdr</a> -> string -> unit</code> </pre>
+
+<pre><span class="keyword">val</span> <a name="VALpcap_findalldevs"></a><a href="code_VALPcap.pcap_findalldevs.html">pcap_findalldevs</a> : <code class="type">unit -> <a href="Pcap.html#TYPEpcap_if">pcap_if</a> array</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_open_live"></a><a href="code_VALPcap.pcap_open_live.html">pcap_open_live</a> : <code class="type">string -> int -> int -> int -> <a href="Pcap.html#TYPEpcap_handle">pcap_handle</a></code></pre><pre><span class="keyword">val</span> <a name="VALpcap_close"></a><a href="code_VALPcap.pcap_close.html">pcap_close</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> unit</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_lookupdev"></a><a href="code_VALPcap.pcap_lookupdev.html">pcap_lookupdev</a> : <code class="type">unit -> string</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_lookupnet"></a><a href="code_VALPcap.pcap_lookupnet.html">pcap_lookupnet</a> : <code class="type">string -> int * int * int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_loop"></a><a href="code_VALPcap.pcap_loop.html">pcap_loop</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int -> <a href="Pcap.html#TYPEpcap_callback">pcap_callback</a> -> string -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_dispatch"></a><a href="code_VALPcap.pcap_dispatch.html">pcap_dispatch</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int -> <a href="Pcap.html#TYPEpcap_callback">pcap_callback</a> -> string -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_open_dead"></a><a href="code_VALPcap.pcap_open_dead.html">pcap_open_dead</a> : <code class="type">int -> int -> <a href="Pcap.html#TYPEpcap_handle">pcap_handle</a></code></pre><pre><span class="keyword">val</span> <a name="VALpcap_open_offline"></a><a href="code_VALPcap.pcap_open_offline.html">pcap_open_offline</a> : <code class="type">string -> <a href="Pcap.html#TYPEpcap_handle">pcap_handle</a></code></pre><pre><span class="keyword">val</span> <a name="VALpcap_dump_open"></a><a href="code_VALPcap.pcap_dump_open.html">pcap_dump_open</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> string -> <a href="Pcap.html#TYPEpcap_dumper">pcap_dumper</a></code></pre><pre><span class="keyword">val</span> <a name="VALpcap_dump_direct"></a><a href="code_VALPcap.pcap_dump_direct.html">pcap_dump_direct</a> : <code class="type"><a href="Pcap.html#TYPEpcap_dumper">pcap_dumper</a> -> <a href="Pcap.html#TYPEpcap_pkthdr">pcap_pkthdr</a> -> string -> unit</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_dump_close"></a><a href="code_VALPcap.pcap_dump_close.html">pcap_dump_close</a> : <code class="type"><a href="Pcap.html#TYPEpcap_dumper">pcap_dumper</a> -> unit</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_compile"></a><a href="code_VALPcap.pcap_compile.html">pcap_compile</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> string -> int -> int -> int * <a href="Pcap.html#TYPEbpf_program">bpf_program</a></code></pre><pre><span class="keyword">val</span> <a name="VALpcap_setfilter"></a><a href="code_VALPcap.pcap_setfilter.html">pcap_setfilter</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> <a href="Pcap.html#TYPEbpf_program">bpf_program</a> -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_freecode"></a><a href="code_VALPcap.pcap_freecode.html">pcap_freecode</a> : <code class="type"><a href="Pcap.html#TYPEbpf_program">bpf_program</a> -> unit</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_setnonblock"></a><a href="code_VALPcap.pcap_setnonblock.html">pcap_setnonblock</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_getnonblock"></a><a href="code_VALPcap.pcap_getnonblock.html">pcap_getnonblock</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_datalink"></a><a href="code_VALPcap.pcap_datalink.html">pcap_datalink</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> <a href="Pcap.html#TYPEdlink">dlink</a></code></pre><pre><span class="keyword">val</span> <a name="VALpcap_snapshot"></a><a href="code_VALPcap.pcap_snapshot.html">pcap_snapshot</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_is_swapped"></a><a href="code_VALPcap.pcap_is_swapped.html">pcap_is_swapped</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_major_version"></a><a href="code_VALPcap.pcap_major_version.html">pcap_major_version</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_minor_version"></a><a href="code_VALPcap.pcap_minor_version.html">pcap_minor_version</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_stats"></a><a href="code_VALPcap.pcap_stats.html">pcap_stats</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int * <a href="Pcap.html#TYPEpcap_stat">pcap_stat</a></code></pre><pre><span class="keyword">val</span> <a name="VALpcap_file"></a><a href="code_VALPcap.pcap_file.html">pcap_file</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> <a href="Pcap.html#TYPEfile_t">file_t</a></code></pre><pre><span class="keyword">val</span> <a name="VALpcap_fileno"></a><a href="code_VALPcap.pcap_fileno.html">pcap_fileno</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> int</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_perror"></a><a href="code_VALPcap.pcap_perror.html">pcap_perror</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> string -> unit</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_geterr"></a><a href="code_VALPcap.pcap_geterr.html">pcap_geterr</a> : <code class="type"><a href="Pcap.html#TYPEpcap_handle">pcap_handle</a> -> string</code></pre><pre><span class="keyword">val</span> <a name="VALpcap_strerror"></a><a href="code_VALPcap.pcap_strerror.html">pcap_strerror</a> : <code class="type">int -> string</code></pre></body></html>

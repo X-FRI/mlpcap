@@ -1,0 +1,71 @@
+MLpcap - 0.9
+------------
+
+MLpcap implements ocaml stubs to libpcap.
+It is distributed under the Lesser GPL.
+Libpcap is available at www.tcpdump.org.
+
+tests/ contains code snippets showing the usage of MLpcap functions.
+
+
+Software requirements
+---------------------
+
+libpcap 0.7-0.8.x:  http://www.tcpdump.org/
+
+CamlIDL: 	http://caml.inria.fr/camlidl/
+	 	Download: http://caml.inria.fr/distrib/bazar-ocaml/
+
+FFCall: 	http://www.gnu.org/directory/libs/c/ffcall.html
+		Download: ftp://ftp.santafe.edu/pub/gnu/
+
+
+Building the library
+--------------------
+
+Run the configure script with the appropriate paths to ffcall and 
+camlidl (read INSTALL) and type 'make' afterwards.
+
+
+MLpcap vs. libpcap types
+------------------------
+
+pcap_handle 		<->	pcap_t*
+pcap_pkthdr		<->	struct pcap_pkthdr
+pcap_stat		<->	struct pcap_stat
+pcap_dumper		<->	struct pcap_dumper*
+pcap_if			<->	struct pcap_if
+bpf_program		<->	struct bpf_program*
+
+
+Differences to the original libpcap
+-----------------------------------
+
+- All functions which return values,structs etc as one of its arguments 
+  in the C version use N-tuple return values in ocaml.
+  E.g. pcap_stats defined in C:
+  	int pcap_stats(pcap_t *p, struct pcap_stat *ps)
+       and in OCaml:
+       	pcap_stats : pcap_handle -> int * pcap_stat
+  
+- All functions containing an errbuf argument in its C version don't
+  use errbuf as argument in MLpcap. If an error occurs the function raises 
+  an exception Failure with errbuf as argument. 
+
+  These functions are: pcap_open_live, pcap_open_offline, pcap_setnonblock,
+  pcap_getnonblock, pcap_findalldevs, pcap_lookupnet
+
+- pcap_dump is called pcap_dump_direct and must be used as shown in 
+  tests/pcap_dump_direct.ml
+
+- pcap_next/pcap_next_ex has not been implemented since it's only a 
+  wrapper to pcap_dispatch and can be implemented as shown in 
+  tests/pcap_next.ml
+
+
+Comments and Bugreports
+-----------------------
+
+Comments, Suggestions etc are welcome. Write me to: jonny@drugphish.ch
+
+

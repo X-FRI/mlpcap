@@ -1,0 +1,7 @@
+name="pcap"
+version="0.8"
+description="Ocaml bindings to libpcap"
+requires=""
+archive(byte) = "pcap.cma"
+archive(opt) = "pcap.cmxa"
+linkopts = "-cclib -lpcap -cclib -lcallback"

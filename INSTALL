@@ -1,0 +1,31 @@
+You MUST provide the following flags to configure:
+
+        --with-ffcall=<dir>:
+                where ffcall's callback.h header is located
+
+        --with-camlidl=<dir>:
+                where camlidl's caml/camlidlruntime.h is found
+
+
+If you provide --with-examples then you must declare aswell
+
+        --with-camlidl-lib=<dir>:
+                where camlidl's libcamlidl.a is found
+
+
+If you have installed your libpcap library in a different path than /usr/lib
+you have to declare:
+
+        --with-libpcap=<dir>
+                where libpcap.a/libpcap.so is found
+
+
+Example configure options for a default system:
+
+        ./configure --with-ffcall=/usr/local/include --with-camlidl=\
+        /usr/local/lib/ocaml --with-camlidl-lib=/usr/local/lib/ocaml/\
+        --with-examples
+
+
+
+

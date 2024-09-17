@@ -1,0 +1,19 @@
+SOURCES=utils.c pcap.idl
+RESULT=pcap
+
+LIBINSTALL_FILES=$(wildcard *.mli *.cmi *.cma *.cmx *.cmxa *.a *.so)
+
+CC=@CC@
+CFLAGS=@CFLAGS@ 
+CLIBS=$(foreach lib, @LIBS@, $(subst -l,,${lib}))
+LDFLAGS=@LDFLAGS@
+IDLFLAGS=-no-include
+
+all: byte-code-library 
+opt: native-code-library
+reallyall: byte-code-library native-code-library
+install: libinstall
+uninstall: libuninstall
+
+-include OCamlMakefile
+

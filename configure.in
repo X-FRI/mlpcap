@@ -1,0 +1,162 @@
+AC_INIT(pcap.idl)
+
+AC_MSG_CHECKING(for version)
+VERSION="`etc/shtool version -l txt -d short VERSION`"
+AC_MSG_RESULT "Configuring Version $VERSION"
+AC_SUBST(VERSION)
+
+
+AC_MSG_CHECKING(for platform)
+ARCH="`etc/shtool guessos`"
+AC_MSG_RESULT "$ARCH"
+AC_SUBST(ARCH)
+AC_CHECKING(for ocaml compiler and tools)
+AC_CHECK_PROG(ocamlc,ocamlc,ocamlc)
+AC_CHECK_PROG(ocamlopt,ocamlopt,ocamlopt)
+AC_CHECK_PROG(ocamlfind,ocamlfind,ocamlfind,ocamlidl)
+
+AC_PROG_INSTALL
+AC_SUBST(INSTALL)
+
+AC_CHECKING(for C compiler)
+AC_PROG_CC
+
+AC_CHECKING(for C header files)
+AC_HEADER_STDC
+
+#
+camlidldir=""
+camlidllibdir=""
+ffcalldir=""
+ffcallarchive=""
+libpcapdir=""
+cp4flag=""
+#
+
+AC_ARG_ENABLE(examples,
+        [  --enable-examples       build example programs [default=no]],,enable_examples="no")
+
+#
+AC_CHECKING(libraries)
+
+#AC_CHECKING(for pcap library)
+#if test "$ac_cv_lib_pcap" == "no"; then
+#	#dirs="/usr/local/lib
+#	#      /usr/local/lib
+#	#      /usr/lib
+#        #      /lib"
+#        dirs="/home/x25/code/MLpcap/libpcap-0.8.3"
+#	for d in $dirs; do
+#  	  	test -f "$d/libpcap.a" && LDFLAGS="-L$d"
+#	done
+#	AC_CHECKING(in more locations)
+#        unset ac_cv_lib_pcap
+#fi
+
+if test "x$enable_examples" = "xyes"; then
+
+AC_ARG_WITH(camlidl-lib,
+[  --with-camlidl-lib[=DIR]  libcamlidl.a location],
+[
+        camlidllibdir=$withval
+        if ! test -f "$camlidllibdir/libcamlidl.a"; then
+                AC_MSG_ERROR(can't find libcamlidl.a in $camlidllibdir)
+        fi
+],
+[
+        AC_MSG_ERROR(missing --with-camlidl-lib)
+])
+
+AC_CHECKING(for ffcall callback library)
+        dirs="/usr/local/lib
+              /usr/lib
+              /lib"
+        for d in $dirs; do
+                test -f "$d/libcallback.a" && ffcallarchive="$d/libcallback.a"
+        done
+fi
+
+AC_ARG_WITH(libpcap,
+[  --with-libpcap[=DIR]      libpcap.a/.so location],
+[
+        libpcapdir=$withval
+        if ! test -f "$libpcapdir/libpcap.a"; then
+                AC_MSG_ERROR(can't find libpcap.a in $libpcapdir)
+        fi
+
+        # check for libpcap >=0.8, set CFLAGS and camlp4 flag
+        `which strings` "$libpcapdir/libpcap.a"|grep to_descr 2>&1 >/dev/null
+        test $? && CFLAGS="$CFLAGS -DHAVE_PCAP08" && cp4flag="HAVE_PCAP08"
+],
+[
+        #AC_MSG_ERROR(missing --with-libpcap)
+        # try the default
+        libpcapdir="/usr/lib"
+])
+
+
+AC_CHECKING(for pcap header files)
+
+AC_ARG_WITH(pcap-header,
+[  --with-pcap-header[=DIR]  pcap header installation directory],
+[
+	pcapheaderdir=$withval
+	AC_CHECK_HEADER($pcapheaderdir/pcap.h,
+	[ CFLAGS="$CFLAGS -I$pcapheaderdir"; HAVE_PCAP_HEADER="yes" ])
+],
+[
+	AC_CHECK_HEADER(pcap.h, [HAVE_PCAP_HEADER="yes"])
+])
+
+if test -z "$HAVE_PCAP_HEADER"; then
+	AC_MSG_ERROR(can't find pcap.h)
+fi
+
+AC_CHECKING(for camlidl header)
+
+AC_ARG_WITH(camlidl,
+[  --with-camlidl[=DIR]      camlidl installation directory], 
+[       
+	camlidldir=$withval 
+	AC_CHECK_HEADER($camlidldir/caml/camlidlruntime.h,
+	[ CFLAGS="$CFLAGS -I$camlidldir"; HAVE_CAMLIDLRUNTIME_H="yes" ])
+],
+[
+	AC_CHECK_HEADER(caml/camlidlruntime.h, [HAVE_CAMLIDLRUNTIME_H="yes"])
+])
+
+if test -z "$HAVE_CAMLIDLRUNTIME_H"; then
+	AC_MSG_ERROR(can't find camlidlruntime.h)
+fi
+
+AC_CHECKING(for ffcall callback header)
+
+AC_ARG_WITH(ffcall,
+[  --with-ffcall[=DIR]       ffcall installation directory], 
+[ 
+	ffcalldir=$withval 
+	AC_CHECK_HEADER($ffcalldir/callback.h,
+	[ CFLAGS="$CFLAGS -I$ffcalldir"; HAVE_CALLBACK_H="yes" ])
+],
+[
+	AC_CHECK_HEADER(callback.h,[HAVE_CALLBACK_H="yes"])
+])
+
+if test -z "$HAVE_CALLBACK_H"; then
+	AC_MSG_ERROR(can't find callback.h)
+fi
+
+AC_SUBST(camlidldir)
+AC_SUBST(camlidllibdir)
+AC_SUBST(ffcalldir)
+AC_SUBST(ffcallarchive)
+AC_SUBST(libpcapdir)
+AC_SUBST(cp4flag)
+
+if test "x$enable_examples" = "xyes"; then
+        output="[Makefile tests/Makefile]"
+else
+        output="Makefile"
+fi
+
+AC_OUTPUT($output)

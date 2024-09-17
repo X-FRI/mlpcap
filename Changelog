@@ -1,0 +1,36 @@
+release 0.9:
+	o added libpcap 0.8 compatibility with 
+	  libpcap 0.7 backward compatibility
+	o added following new API functions:
+		pcap_list_datalinks
+		pcap_set_datalink
+		pcap_datalink_name_to_val
+		pcap_datalink_val_to_name
+		pcap_datalink_val_to_description
+		pcap_breakloop
+		pcap_dump_flush
+		pcap_lib_version
+		pcap_get_selectable
+	o license fix, changed from GPL to LGPL 
+        o more configure arguments for enhanced 
+          configurability
+
+release 0.8:
+        o added autoconf support for library and tests
+        o split the C functions in a different file
+        o some compatibility fixes
+        o fixing configure.in and pcap.idl syntax 
+        o makefile bug fixes
+        o various bugfixes and patches from Sylvain Le Gall
+
+release 0.7:
+	o added function pcap_findalldevs
+	o changed pcap_datalink so that it returns
+	  directly a value of type datalink (e.g. DLT_EN10MB)
+	o IDL file is now included to generate the stub code
+	o changed Makefiles
+	o fixed example bugs
+
+release 0.5:
+	o initial release
+

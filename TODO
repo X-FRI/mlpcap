@@ -1,0 +1,7 @@
+Todo for a next release:
+
+	- improve Makefiles, examples
+	- bugfixes
+	- provide good decode/parsing functions for handling network data
+
+

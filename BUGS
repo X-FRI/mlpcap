@@ -1,0 +1,11 @@
+Known bugs
+----------
+
+pcap_open_offline: used with pcap_stats returns wrong packet counts
+
+pcap_dump_direct: cant be called directly, only via callback wrapper function
+
+pcap_file: not sure if this is of any use in ocaml ..
+
+
+
